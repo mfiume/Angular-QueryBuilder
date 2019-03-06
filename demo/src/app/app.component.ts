@@ -10,14 +10,46 @@ import { QueryBuilderClassNames, QueryBuilderConfig } from 'angular2-query-build
     <div class="m-s">GA4GH Discovery Search Query Builder</div>
   </mat-toolbar>
   <div class="m-a">
-  <mat-form-field style="width:400px">
-    <input matInput placeholder="Search Endpoint" value="http://localhost/data-repository-service">
+  <mat-form-field style="width: 400px" >
+    <mat-select placeholder="Configuration" (selectionChange)="changeConfiguration($event.value)">
+      <mat-option *ngFor="let configuration of configurations" [value]="configuration">
+        {{ configuration.name }}
+      </mat-option>
+    </mat-select>
   </mat-form-field>
   <div class="pull-right">
     <button mat-raised-button color="primary">Search</button>
   </div>
   <div class="clearfix"></div>
   <mat-tab-group>
+    <mat-tab label="Fields">
+      <div class="m-v">
+        <div class="mat-table">
+          <div class="mat-header-row">
+            <div class="mat-header-cell">Name</div>
+            <div class="mat-header-cell">ID</div>
+            <div class="mat-header-cell">Type</div>
+            <div class="mat-header-cell">Options</div>
+            <div class="mat-header-cell">Operators</div>
+          </div>
+          <div class="mat-row" *ngFor="let field of currentConfig.fields | keyvalue">
+            <div class="mat-cell">{{field.value.name}}</div>
+            <div class="mat-cell"><a href="{{field.value.spec}}">{{field.value.id}}</a></div>
+            <div class="mat-cell">{{field.value.type}}</div>
+            <div class="mat-cell">
+              <div *ngFor="let option of field.value.options | keyvalue">
+                {{option.value.name}}
+              </div>
+            </div>
+            <div class="mat-cell">
+              <div *ngFor="let operator of field.value.operators">
+                {{operator}}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-tab>
     <mat-tab label="GUI">
       <div class="m-v">
         <query-builder [(ngModel)]='query' [config]='currentConfig'>
@@ -42,15 +74,6 @@ import { QueryBuilderClassNames, QueryBuilderConfig } from 'angular2-query-build
               <mat-radio-button [style.padding.px]="10" value="and">And</mat-radio-button>
               <mat-radio-button [style.padding.px]="10" value="or">Or</mat-radio-button>
             </mat-radio-group>
-          </ng-container>
-          <ng-container *queryEntity="let rule; let entities=entities; let onChange=onChange">
-            <mat-form-field>
-              <mat-select [(ngModel)]="rule.entity" (ngModelChange)="onChange($event, rule)">
-                <mat-option *ngFor="let entity of entities" [value]="entity.value">
-                {{entity.name}}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
           </ng-container>
           <ng-container *queryField="let rule; let fields=fields; let onChange=onChange; let getFields = getFields">
             <mat-form-field>
@@ -102,9 +125,10 @@ import { QueryBuilderClassNames, QueryBuilderConfig } from 'angular2-query-build
             </mat-form-field>
           </ng-container>
           <ng-container *queryInput="let rule; let field=field; type: 'number'; let onChange=onChange">
-            <mat-form-field [style.width.px]="50">
+            <mat-form-field [style.width.px]="100">
               <input matInput [(ngModel)]="rule.value" type="number" (ngModelChange)="onChange()">
             </mat-form-field>
+            {{field.units}}
           </ng-container>
           <ng-container *queryInput="let rule; let field=field; type: 'string'; let onChange=onChange">
             <mat-form-field>
@@ -122,40 +146,12 @@ import { QueryBuilderClassNames, QueryBuilderConfig } from 'angular2-query-build
     </mat-tab>
     <mat-tab label="JSON">
       <div class="m-v">
-        <ngx-json-viewer [json]='query'></ngx-json-viewer>
+        <ngx-json-viewer [(json)]='query'></ngx-json-viewer>
       </div>
     </mat-tab>
     <mat-tab label="SQL">
       <div class="m-v">
         TODO
-      </div>
-    </mat-tab>
-    <mat-tab label="Fields">
-      <div class="m-a">
-        <div class="mat-table">
-          <div class="mat-header-row">
-            <div class="mat-header-cell">Name</div>
-            <div class="mat-header-cell">ID</div>
-            <div class="mat-header-cell">Type</div>
-            <div class="mat-header-cell">Options</div>
-            <div class="mat-header-cell">Operators</div>
-          </div>
-          <div class="mat-row" *ngFor="let field of currentConfig.fields | keyvalue">
-            <div class="mat-cell">{{field.value.name}}</div>
-            <div class="mat-cell"><a href="{{field.value.spec}}">{{field.value.id}}</a></div>
-            <div class="mat-cell">{{field.value.type}}</div>
-            <div class="mat-cell">
-              <div *ngFor="let option of field.value.options | keyvalue">
-                {{option.value.name}}
-              </div>
-            </div>
-            <div class="mat-cell">
-              <div *ngFor="let operator of field.value.operators">
-                {{operator}}
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
     </mat-tab>
   </mat-tab-group>
@@ -289,7 +285,7 @@ export class AppComponent {
 
   public configurations = [
     {
-      name : "Matchmaker",
+      name : "Subjects",
       serviceUrl : "http://matchmaker.org/search",
       query : {
         condition: 'and',
@@ -339,11 +335,153 @@ export class AppComponent {
           }
         }
       }
+    },
+    {
+      name : "Data",
+      serviceUrl : "http://matchmaker.org/search",
+      query : {
+        condition: 'and',
+        rules: [
+          {field: 'age', operator: '<='}
+        ]
+      },
+      config : {
+        fields: {
+          age: { id: 'org.ga4gh.subject.age', spec : "http://ga4gh.org", name: 'Age', type: 'number'},
+          dob : { id: 'org.ga4gh.subject.dateOfBirth', spec: "http://ga4gh.org", name: 'Date of Birth', type: 'date', operators : ['=', '<=', '>'] }
+        }
+      }
+    },
+    {
+      name : "Personal Genomes Project Canada",
+      serviceUrl : "http://matchmaker.org/search",
+      query : {
+        condition: 'and',
+        rules: [
+        ]
+      },
+      config : {
+        fields: {
+          subject_id : {
+            "name": "Subject ID",
+            "id": "org.ga4gh.subject.id",
+            "type": "number",
+            "optional": false
+          },
+          ethnicity: {
+            "name": "Ethnicity",
+            "type": "string",
+            "id": "ca.pgpc.phenotype.ethnicity"
+          },
+          body_type: {
+            "name": "Body type",
+            "type": "string",
+            "id": "ca.pgpc.phenotype.body_type"
+          },
+          allergy: {
+            "name": "Allergy",
+            "type": "string",
+            "id": "ca.pgpc.phenotype.allergy"
+          },
+          weight: {
+            "name": "Weight",
+            "type": "number",
+            "id": "ca.pgpc.phenotype.body_weight",
+            "units": "kg"
+          },
+          medical_procedure: {
+            "name": "Medical Procedure",
+            "type": "string",
+            "id": "ca.pgpc.phenotype.medical_procedure"
+          },
+          height: {
+            "name": "Height",
+            "type": "number",
+            "id": "ca.pgpc.phenotype.body_height",
+            "units": "cm"
+          },
+          immunization: {
+            "name": "Immunization",
+            "type": "string",
+            "id": "ca.pgpc.phenotype.immunization"
+          },
+          blood_pressure: {
+            "name": "Blood pressure",
+            "type": "string",
+            "id": "ca.pgpc.phenotype.blood_pressure",
+            "units": "mmhg",
+            "notes": "Systolic blood pressure, literal \"/\" character, then diastolic blood pressure"
+          },
+          birth_year: {
+            "name": "Birth year",
+            "type": "number",
+            "id": "ca.pgpc.phenotype.birth_year",
+            "precision": "1 year"
+          },
+          birth_month: {
+            "name": "Birth month",
+            "type": "number",
+            "id": "ca.pgpc.phenotype.birth_month",
+            "precision": "1 month"
+          },
+          birth_year_month: {
+            "name": "Birth year month",
+            "type": "string",
+            "id": "ca.pgpc.phenotype.birth_year_month",
+            "precision": "1 month"
+          },
+          medication: {
+            "name": "Medication",
+            "type": "string",
+            "id": "ca.pgpc.phenotype.medication"
+          },
+          blood_type: {
+            "name": "Blood type",
+            "type": "category",
+            "id": "ca.pgpc.phenotype.abo_rhd_blood_group",
+            "options" : [
+              { name : "A+", value: "Group A, RhD positive" },
+              { name : "A-", value: "Group A, RhD positive"},
+              { name : "AB+", value: "Group AB, RhD positive"},
+              { name : "AB-", value: "Group AB, RhD negative"},
+              { name : "B+", value: "Group B, RhD positive"},
+              { name : "B-", value: "Group B, RhD negative"},
+              { name : "O+", value: "Group O, RhD positive"},
+              { name : "O-", value: "Group O, RhD negative"}
+            ]
+          },
+          sex: {
+            "name": "Sex",
+            "type": "category",
+            "id": "ca.pgpc.phenotype.sex",
+            options: [
+              { value: "M", name: "Male" },
+              { value: "F", name: "Female" },
+              { value: "X", name: "Intersex"}
+            ]
+          },
+          symptom: {
+            "name": "Conditions or Symptom",
+            "type": "string",
+            "id": "ca.pgpc.phenotype.conditions_or_symptom"
+          },
+          test_result: {
+            "name": "Test Result",
+            "type": "string",
+            "id": "ca.pgpc.phenotype.test_result"
+          }
+        }
+      }
     }
   ];
 
   public query = this.configurations[0].query;
   public config = this.configurations[0].config;
+
+  changeConfiguration(configuration) {
+    this.currentConfig = configuration.config;
+    this.query = configuration.query;
+  };
 
   constructor(
     private formBuilder: FormBuilder
