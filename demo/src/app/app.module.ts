@@ -7,6 +7,8 @@ import { QueryBuilderModule } from 'angular2-query-builder';
 
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
+  MatToolbarModule,
+  MatTabsModule,
   MatButtonModule,
   MatCheckboxModule,
   MatSelectModule,
@@ -25,6 +27,8 @@ import {
     ReactiveFormsModule,
     QueryBuilderModule,
     NoopAnimationsModule,
+    MatToolbarModule,
+    MatTabsModule,
     MatButtonModule,
     MatCheckboxModule,
     MatSelectModule,
