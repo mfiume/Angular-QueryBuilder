@@ -11,8 +11,7 @@ import { NgxJsonViewerModule } from 'ngx-json-viewer';
 
 import {
   MatToolbarModule,
-  MatTableModule,
-  MatExpansionModule,
+  MatTooltipModule,
   MatTabsModule,
   MatButtonModule,
   MatCheckboxModule,
@@ -34,8 +33,7 @@ import {
     QueryBuilderModule,
     NoopAnimationsModule,
     MatToolbarModule,
-    MatTableModule,
-    MatExpansionModule,
+    MatTooltipModule,
     MatTabsModule,
     MatButtonModule,
     MatCheckboxModule,
