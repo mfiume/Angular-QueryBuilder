@@ -6,8 +6,13 @@ import { AppComponent } from './app.component';
 import { QueryBuilderModule } from 'angular2-query-builder';
 
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+
+import { NgxJsonViewerModule } from 'ngx-json-viewer';
+
 import {
   MatToolbarModule,
+  MatTableModule,
+  MatExpansionModule,
   MatTabsModule,
   MatButtonModule,
   MatCheckboxModule,
@@ -22,12 +27,15 @@ import {
 
 @NgModule({
   imports: [
+    NgxJsonViewerModule,
     BrowserModule,
     FormsModule,
     ReactiveFormsModule,
     QueryBuilderModule,
     NoopAnimationsModule,
     MatToolbarModule,
+    MatTableModule,
+    MatExpansionModule,
     MatTabsModule,
     MatButtonModule,
     MatCheckboxModule,

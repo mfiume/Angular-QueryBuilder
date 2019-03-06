@@ -7,12 +7,15 @@ import { QueryBuilderClassNames, QueryBuilderConfig } from 'angular2-query-build
   selector: 'app-root',
   template: `
   <mat-toolbar>
-    <div class="content">GA4GH Discovery Search Query Builder</div>
+    <div class="m-s">GA4GH Discovery Search Query Builder</div>
   </mat-toolbar>
-
-  <mat-tab-group class="content">
+  <div class="m-a">
+  <mat-form-field style="width:400px">
+    <input matInput placeholder="Search Endpoint" value="http://localhost/data-repository-service">
+  </mat-form-field>
+  <mat-tab-group>
     <mat-tab label="GUI">
-      <query-builder class="content-v" [(ngModel)]='query' [config]='currentConfig' [allowRuleset]='allowRuleset' [allowCollapse]='allowCollapse'>
+      <query-builder class="m-v" [(ngModel)]='query' [config]='currentConfig' [allowRuleset]='allowRuleset' [allowCollapse]='allowCollapse'>
         <ng-container *queryButtonGroup="let ruleset; let addRule=addRule; let addRuleSet=addRuleSet; let removeRuleSet=removeRuleSet">
           <button type="button" mat-icon-button color="primary" (click)="addRule()">
             <mat-icon>add</mat-icon></button>
@@ -109,11 +112,32 @@ import { QueryBuilderClassNames, QueryBuilderConfig } from 'angular2-query-build
       </query-builder>
     </mat-tab>
     <mat-tab label="JSON">
-      <div class="content-v">
-        {{query | json}}
+      <div class="m-v">
+        <ngx-json-viewer [json]="query"></ngx-json-viewer>
+      </div>
+    </mat-tab>
+    <mat-tab label="Fields">
+      <div class="m-a">
+        <div class="mat-table">
+          <div class="mat-header-row">
+            <div class="mat-header-cell">Name</div>
+            <div class="mat-header-cell">ID</div>
+            <div class="mat-header-cell">Type</div>
+            <div class="mat-header-cell">Options</div>
+            <div class="mat-header-cell">Operators</div>
+          </div>
+          <div class="mat-row" *ngFor="let field of currentConfig.fields | keyvalue">
+            <div class="mat-cell">{{field.value.name}}</div>
+            <div class="mat-cell">{{field.value.id}}</div>
+            <div class="mat-cell">{{field.value.type}}</div>
+            <div class="mat-cell">{{field.value.options}}</div>
+            <div class="mat-cell">{{field.value.operators}}</div>
+          </div>
+        </div>
       </div>
     </mat-tab>
   </mat-tab-group>
+  </div>
   `,
   styles: [`
   /deep/ html {
@@ -150,12 +174,61 @@ import { QueryBuilderClassNames, QueryBuilderConfig } from 'angular2-query-build
     height: 300px;
   }
 
-  .content {
+  .m-b-sm {
+    margin-bottom: 10px;
+  }
+
+  .m-t-sm {
+    margin-top: 10px;
+  }
+
+  .m-a {
+    margin: 20px;
+  }
+
+  .m-s {
     margin: 0 20px 0 20px;
   }
 
-  .content-v {
+  .m-v {
     margin: 20px 0 20px 0;
+  }
+
+  .h4 {
+    font-size: 16px;
+    margin: 0;
+  }
+
+  .h5 {
+    font-size: 14px;
+    margin: 0;
+  }
+
+  .text-muted {
+    color: #4f4f4f;
+  }
+
+  .mat-table {
+    display: block;
+  }
+
+  .mat-row,
+  .mat-header-row {
+    display: flex;
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+    border-bottom-color: #CCC; 
+    align-items: center;
+    min-height: 48px;
+    padding: 0 24px;
+  }
+
+  .mat-cell,
+  .mat-header-cell {
+    flex: 1;
+    overflow: hidden;
+    word-wrap: break-word;
+    font-size:14px;
   }
 
   `]
@@ -246,9 +319,11 @@ export class AppComponent {
 
   public config: QueryBuilderConfig = {
     fields: {
-      age: {name: 'Age', type: 'number'},
+      age: { id: 'org.ga4gh.subject.age', name: 'Age', type: 'number'},
+      dob : { id: 'org.ga4gh.subject.dateOfBirth', name: 'Date of Birth', type: 'date', operators : ['=', '<=', '>'] },
+      phenotype : {name: 'Phenotype', type: 'string', operators : ['sibling', 'parent', 'neighbourhood', 'is']},
       gender: {
-        name: 'Gender',
+        name: 'Sex',
         type: 'category',
         options: [
           {name: 'Male', value: 'm'},
