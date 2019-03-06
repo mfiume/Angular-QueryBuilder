@@ -20,7 +20,7 @@ import { QueryBuilderClassNames, QueryBuilderConfig } from 'angular2-query-build
   <mat-tab-group>
     <mat-tab label="GUI">
       <div class="m-v">
-        <query-builder [(ngModel)]='query' [config]='currentConfig' [allowRuleset]='allowRuleset' [allowCollapse]='allowCollapse'>
+        <query-builder [(ngModel)]='query' [config]='currentConfig'>
           <ng-container *queryButtonGroup="let ruleset; let addRule=addRule; let addRuleSet=addRuleSet; let removeRuleSet=removeRuleSet">
             <button type="button" matTooltip="Add Rule" mat-icon-button color="primary" (click)="addRule()">
               <mat-icon>add</mat-icon></button>
@@ -122,7 +122,7 @@ import { QueryBuilderClassNames, QueryBuilderConfig } from 'angular2-query-build
     </mat-tab>
     <mat-tab label="JSON">
       <div class="m-v">
-        <ngx-json-viewer [json]="query"></ngx-json-viewer>
+        <ngx-json-viewer [json]='query'></ngx-json-viewer>
       </div>
     </mat-tab>
     <mat-tab label="SQL">
@@ -142,7 +142,7 @@ import { QueryBuilderClassNames, QueryBuilderConfig } from 'angular2-query-build
           </div>
           <div class="mat-row" *ngFor="let field of currentConfig.fields | keyvalue">
             <div class="mat-cell">{{field.value.name}}</div>
-            <div class="mat-cell">{{field.value.id}}</div>
+            <div class="mat-cell"><a href="{{field.value.spec}}">{{field.value.id}}</a></div>
             <div class="mat-cell">{{field.value.type}}</div>
             <div class="mat-cell">
               <div *ngFor="let option of field.value.options | keyvalue">
@@ -286,109 +286,69 @@ export class AppComponent {
     inputControlSize: 'col-auto'
   };
 
-  public query = {
-    condition: 'and',
-    rules: [
-      {field: 'age', operator: '<=', entity: 'physical'},
-      {field: 'birthday', operator: '=', value: new Date(), entity: 'nonphysical'},
-      {
-        condition: 'or',
+
+  public configurations = [
+    {
+      name : "Matchmaker",
+      serviceUrl : "http://matchmaker.org/search",
+      query : {
+        condition: 'and',
         rules: [
-          {field: 'gender', operator: '=', entity: 'physical'},
-          {field: 'occupation', operator: 'in', entity: 'nonphysical'},
-          {field: 'school', operator: 'is null', entity: 'nonphysical'},
-          {field: 'notes', operator: '=', entity: 'nonphysical'}
-        ]
-      }
-    ]
-  };
-
-  public entityConfig: QueryBuilderConfig = {
-    entities: {
-      physical: {name: 'Physical Attributes'},
-      nonphysical: {name: 'Nonphysical Attributes'}
-    },
-    fields: {
-      age: {name: 'Age', type: 'number', entity: 'physical'},
-      gender: {
-        name: 'Gender',
-        entity: 'physical',
-        type: 'category',
-        options: [
-          {name: 'Male', value: 'm'},
-          {name: 'Female', value: 'f'}
+          {field: 'age', operator: '<='},
+          {field: 'birthday', operator: '=', value: new Date()},
+          {
+            condition: 'or',
+            rules: [
+              {field: 'gender', operator: '='},
+              {field: 'occupation', operator: 'in'},
+              {field: 'school', operator: 'is null'},
+              {field: 'notes', operator: '='}
+            ]
+          }
         ]
       },
-      name: {name: 'Name', type: 'string', entity: 'nonphysical'},
-      notes: {name: 'Notes', type: 'textarea', operators: ['=', '!='], entity: 'nonphysical'},
-      educated: {name: 'College Degree?', type: 'boolean', entity: 'nonphysical'},
-      birthday: {name: 'Birthday', type: 'date', operators: ['=', '<=', '>'],
-        defaultValue: (() => new Date()), entity: 'nonphysical'
-      },
-      school: {name: 'School', type: 'string', nullable: true, entity: 'nonphysical'},
-      occupation: {
-        name: 'Occupation',
-        entity: 'nonphysical',
-        type: 'category',
-        options: [
-          {name: 'Student', value: 'student'},
-          {name: 'Teacher', value: 'teacher'},
-          {name: 'Unemployed', value: 'unemployed'},
-          {name: 'Scientist', value: 'scientist'}
-        ]
-      }
-    }
-  };
-
-  public config: QueryBuilderConfig = {
-    fields: {
-      age: { id: 'org.ga4gh.subject.age', spec : "http://ga4gh.org", name: 'Age', type: 'number'},
-      dob : { id: 'org.ga4gh.subject.dateOfBirth', name: 'Date of Birth', type: 'date', operators : ['=', '<=', '>'] },
-      phenotype : {name: 'Phenotype', id : "org.ga4gh.cnp.phenopacket.hpo", spec: "http://ga4gh.org", type: 'phenotype', operators : ['sibling of', 'parent of', 'neighbourhood of', 'is']},
-      gender: {
-        name: 'Sex',
-        type: 'category',
-        options: [
-          {name: 'Male', value: 'm'},
-          {name: 'Female', value: 'f'}
-        ]
-      },
-      name: {name: 'Name', type: 'string'},
-      notes: {name: 'Notes', type: 'textarea', operators: ['=', '!=']},
-      educated: {name: 'College Degree?', type: 'boolean'},
-      birthday: {name: 'Birthday', type: 'date', operators: ['=', '<=', '>'],
-        defaultValue: (() => new Date())
-      },
-      school: {name: 'School', type: 'string', nullable: true},
-      occupation: {
-        name: 'Occupation',
-        type: 'category',
-        options: [
-          {name: 'Student', value: 'student'},
-          {name: 'Teacher', value: 'teacher'},
-          {name: 'Unemployed', value: 'unemployed'},
-          {name: 'Scientist', value: 'scientist'}
-        ]
+      config : {
+        fields: {
+          age: { id: 'org.ga4gh.subject.age', spec : "http://ga4gh.org", name: 'Age', type: 'number'},
+          dob : { id: 'org.ga4gh.subject.dateOfBirth', spec: "http://ga4gh.org", name: 'Date of Birth', type: 'date', operators : ['=', '<=', '>'] },
+          phenotype : {name: 'Phenotype', id : "org.ga4gh.cnp.phenopacket.hpo", spec: "http://ga4gh.org", type: 'phenotype', operators : ['sibling of', 'parent of', 'neighbourhood of', 'is']},
+          gender: {
+            name: 'Sex',
+            type: 'category',
+            options: [
+              {name: 'Male', value: 'm'},
+              {name: 'Female', value: 'f'}
+            ]
+          },
+          name: {name: 'Name', type: 'string'},
+          notes: {name: 'Notes', type: 'textarea', operators: ['=', '!=']},
+          educated: {name: 'College Degree', type: 'boolean'},
+          birthday: {name: 'Birthday', type: 'date', operators: ['=', '<=', '>'],
+            defaultValue: (() => new Date())
+          },
+          school: {name: 'School', type: 'string', nullable: true},
+          occupation: {
+            name: 'Occupation',
+            type: 'category',
+            options: [
+              {name: 'Student', value: 'student'},
+              {name: 'Teacher', value: 'teacher'},
+              {name: 'Unemployed', value: 'unemployed'},
+              {name: 'Scientist', value: 'scientist'}
+            ]
+          }
+        }
       }
     }
-  };
+  ];
 
-  public currentConfig: QueryBuilderConfig;
-  public allowRuleset: boolean = true;
-  public allowCollapse: boolean;
+  public query = this.configurations[0].query;
+  public config = this.configurations[0].config;
 
   constructor(
     private formBuilder: FormBuilder
   ) {
     this.queryCtrl = this.formBuilder.control(this.query);
     this.currentConfig = this.config;
-  }
-
-  switchModes(event: Event) {
-    this.currentConfig = (<HTMLInputElement>event.target).checked ? this.entityConfig : this.config;
-  }
-
-  changeDisabled(event: Event) {
-    (<HTMLInputElement>event.target).checked ? this.queryCtrl.disable() : this.queryCtrl.enable();
   }
 }
