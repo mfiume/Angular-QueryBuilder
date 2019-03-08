@@ -1,6 +1,7 @@
 import {FormBuilder, FormControl} from '@angular/forms';
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {CONFIGURATIONS} from './configurations.model';
+import {JsonEditorComponent, JsonEditorOptions} from 'ang-jsoneditor';
 
 @Component({
   selector: 'app-root',
@@ -12,13 +13,19 @@ export class AppComponent {
   public configurations = CONFIGURATIONS;
   public currentConfig = CONFIGURATIONS[0];
 
-  changeConfiguration(configuration) {
-    this.currentConfig = configuration;
-  };
+  @ViewChild('jsonEditor')
+  jsonEditor: JsonEditorComponent;
+
+  public editorOptions = new JsonEditorOptions();
 
   constructor(
     private formBuilder: FormBuilder
   ) {
     this.queryCtrl = this.formBuilder.control(this.currentConfig.query);
+
+    this.editorOptions.mode = 'tree';
+    this.editorOptions.mainMenuBar = false;
+    this.editorOptions.navigationBar = false;
+    this.editorOptions.statusBar = false;
   }
 }

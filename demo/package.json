@@ -30,8 +30,9 @@
     "@angular/router": "^6.1.0",
     "@material/top-app-bar": "^0.44.1",
     "angular2-query-builder": "^0.4.0",
+    "ang-jsoneditor": "^1.7.1",
+    "jsoneditor": "^5.27.0",
     "core-js": "^2.5.4",
-    "ngx-json-viewer": "^2.4.0",
     "rxjs": "6.0.0",
     "zone.js": "~0.8.26"
   },

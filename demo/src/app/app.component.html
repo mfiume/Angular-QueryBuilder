@@ -155,7 +155,9 @@
 
     <mat-tab label="JSON">
       <div class="m-v">
-        <ngx-json-viewer [(json)]='currentConfig.query'></ngx-json-viewer>
+        <json-editor #jsonEditor
+                     [data]="currentConfig.query"
+                     [options]="editorOptions"></json-editor>
       </div>
     </mat-tab>
     <mat-tab label="SQL">

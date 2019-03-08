@@ -7,7 +7,6 @@ import { QueryBuilderModule } from 'angular2-query-builder';
 
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
-import { NgxJsonViewerModule } from 'ngx-json-viewer';
 
 import {
   MatToolbarModule,
@@ -23,10 +22,11 @@ import {
   MatIconModule,
   MatCardModule
 } from '@angular/material';
+import {NgJsonEditorModule} from 'ang-jsoneditor';
 
 @NgModule({
   imports: [
-    NgxJsonViewerModule,
+    NgJsonEditorModule,
     BrowserModule,
     FormsModule,
     ReactiveFormsModule,
