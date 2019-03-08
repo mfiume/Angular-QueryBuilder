@@ -8,10 +8,10 @@ import {JsonEditorComponent, JsonEditorOptions} from 'ang-jsoneditor';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   public queryCtrl: FormControl;
   public configurations = CONFIGURATIONS;
-  public currentConfig = CONFIGURATIONS[0];
+  public currentConfig: any = CONFIGURATIONS[0];
 
   @ViewChild('jsonEditor')
   jsonEditor: JsonEditorComponent;
@@ -27,5 +27,18 @@ export class AppComponent {
     this.editorOptions.mainMenuBar = false;
     this.editorOptions.navigationBar = false;
     this.editorOptions.statusBar = false;
+    this.editorOptions['expandAll'] = true;
+  }
+
+  updateJsonEditor($event) {
+    this.jsonEditor.set($event);
+    this.jsonEditor.expandAll();
+  }
+
+  ngOnInit(): void {
+    if (this.jsonEditor && this.jsonEditor['editor']) {
+      this.jsonEditor.set(this.currentConfig.query);
+      this.jsonEditor.expandAll();
+    }
   }
 }
