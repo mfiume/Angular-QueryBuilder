@@ -2,6 +2,7 @@ import {FormBuilder, FormControl} from '@angular/forms';
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {CONFIGURATIONS} from './configurations.model';
 import {JsonEditorComponent, JsonEditorOptions} from 'ang-jsoneditor';
+import { ApiService } from './app.api.service';
 
 @Component({
   selector: 'app-root',
@@ -19,7 +20,8 @@ export class AppComponent implements OnInit {
   public editorOptions = new JsonEditorOptions();
 
   constructor(
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private apiService: ApiService
   ) {
     this.queryCtrl = this.formBuilder.control(this.currentConfig.query);
 
@@ -40,5 +42,18 @@ export class AppComponent implements OnInit {
       this.jsonEditor.set(this.currentConfig.query);
       this.jsonEditor.expandAll();
     }
+
+    console.log("Fetching fields");
+  //  console.log(this.apiService);
+  //  console.log(this.apiService.getFields());
+
+    console.log(this.apiService.httpClient.get<Field[]>('http://localhost:8080/fields'));
+
+    /*
+    this.apiService.getFields().subscribe((res)=>{
+      this.apiService.getFields(this.apiService.nextPage).subscribe((res)=>{
+        console.log(res.body);
+      });
+    });*/
   }
 }

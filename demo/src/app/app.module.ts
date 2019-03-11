@@ -6,7 +6,7 @@ import { AppComponent } from './app.component';
 import { QueryBuilderModule } from 'angular2-query-builder';
 
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-
+import { HttpClientModule } from '@angular/common/http';
 
 import {
   MatToolbarModule,
@@ -32,6 +32,7 @@ import {NgJsonEditorModule} from 'ang-jsoneditor';
     ReactiveFormsModule,
     QueryBuilderModule,
     NoopAnimationsModule,
+    HttpClientModule,
     MatToolbarModule,
     MatTooltipModule,
     MatTabsModule,
