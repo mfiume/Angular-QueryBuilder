@@ -6,18 +6,13 @@ import { Field } from './model/search/field';
   providedIn: 'root'
 })
 export class ApiService {
-  apiURL: string = 'http://localhost:8080';
+  private apiURL = 'http://localhost:8080';
 
   constructor(private httpClient: HttpClient) {
-    console.log("Constructor");
-    console.log("Pinging " + `${this.apiURL}/fields`);
-    console.log(this.getFields());
+
   }
 
   getFields() {
     return this.httpClient.get<Field[]>(`${this.apiURL}/fields`);
   }
-
-  //this.getFields = getFields;
-
 }

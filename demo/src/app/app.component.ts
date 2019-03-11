@@ -43,17 +43,9 @@ export class AppComponent implements OnInit {
       this.jsonEditor.expandAll();
     }
 
-    console.log("Fetching fields");
-  //  console.log(this.apiService);
-  //  console.log(this.apiService.getFields());
-
-    console.log(this.apiService.httpClient.get<Field[]>('http://localhost:8080/fields'));
-
-    /*
-    this.apiService.getFields().subscribe((res)=>{
-      this.apiService.getFields(this.apiService.nextPage).subscribe((res)=>{
-        console.log(res.body);
-      });
-    });*/
+    this.apiService
+      .getFields()
+      .subscribe((dto) => console.log(dto),
+        (err) => console.log('Error', err));
   }
 }
