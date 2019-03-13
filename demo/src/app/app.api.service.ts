@@ -13,6 +13,7 @@ export class ApiService {
   }
 
   getFields() {
-    return this.httpClient.get<Field[]>(`${this.apiURL}/fields`);
+    return this.httpClient.get(`${this.apiURL}/fields`);
   }
+
 }

@@ -1,59 +1,5 @@
 export const CONFIGURATIONS = [
   {
-    name : "Subjects",
-    serviceUrl : "http://matchmaker.org/search",
-    query : {
-      condition: 'and',
-      rules: [
-        {field: 'age', operator: '<='},
-        {field: 'birthday', operator: '=', value: new Date()},
-        {
-          condition: 'or',
-          rules: [
-            {field: 'gender', operator: '='},
-            {field: 'occupation', operator: 'in'},
-            {field: 'school', operator: 'is null'},
-            {field: 'notes', operator: '='}
-          ]
-        }
-      ]
-    },
-    config : {
-      fields: {
-        age: { id: 'org.ga4gh.subject.age', spec : "http://ga4gh.org", name: 'Age', type: 'number'},
-        dob : { id: 'org.ga4gh.subject.dateOfBirth', spec: "http://ga4gh.org", name: 'Date of Birth', type: 'date', operators : ['=', '<=', '>'] },
-        phenotype : {name: 'Phenotype', id : "org.ga4gh.cnp.phenopacket.hpo", spec: "http://ga4gh.org", type: 'phenotype', operators : ['sibling of', 'parent of', 'neighbourhood of', 'is']},
-        gender: {
-          name: 'Sex',
-          type: 'category',
-          options: [
-            {name: 'Male', value: 'm'},
-            {name: 'Female', value: 'f'}
-          ]
-        },
-        name: {name: 'Name', type: 'string'},
-        notes: {name: 'Notes', type: 'textarea', operators: ['=', '!=']},
-        educated: {name: 'College Degree', type: 'boolean'},
-        birthday: {name: 'Birthday', type: 'date', operators: ['=', '<=', '>'],
-          defaultValue: (() => new Date())
-        },
-        school: {name: 'School', type: 'string', nullable: true},
-        occupation: {
-          name: 'Occupation',
-          type: 'category',
-          options: [
-            {name: 'Student', value: 'student'},
-            {name: 'Teacher', value: 'teacher'},
-            {name: 'Unemployed', value: 'unemployed'},
-            {name: 'Scientist', value: 'scientist'}
-          ]
-        }
-      }
-    }
-  },
-  {
-    name : "Data",
-    serviceUrl : "http://matchmaker.org/search",
     query : {
       condition: 'and',
       rules: [
@@ -68,8 +14,6 @@ export const CONFIGURATIONS = [
     }
   },
   {
-    name : "Personal Genomes Project Canada",
-    serviceUrl : "http://matchmaker.org/search",
     query : {
       condition: 'and',
       rules: [

@@ -11,8 +11,16 @@ import { ApiService } from './app.api.service';
 })
 export class AppComponent implements OnInit {
   public queryCtrl: FormControl;
-  public configurations = CONFIGURATIONS;
-  public currentConfig: any = CONFIGURATIONS[0];
+
+  public currentConfig = {
+    query : {
+      condition: 'and',
+      rules: []
+    },
+    config : {
+      fields : {}
+    }
+  }
 
   @ViewChild('jsonEditor')
   jsonEditor: JsonEditorComponent;
@@ -29,23 +37,35 @@ export class AppComponent implements OnInit {
     this.editorOptions.mainMenuBar = false;
     this.editorOptions.navigationBar = false;
     this.editorOptions.statusBar = false;
-    this.editorOptions['expandAll'] = true;
   }
 
   updateJsonEditor($event) {
     this.jsonEditor.set($event);
-    this.jsonEditor.expandAll();
+  }
+
+  normalizeArray<T>(array: Array<T>, indexKey: keyof T) {
+     const normalizedObject: any = {}
+     for (let i = 0; i < array.length; i++) {
+          const key = array[i][indexKey]
+          normalizedObject[key] = array[i]
+     }
+     return normalizedObject as { [key: string]: T }
+   }
+
+  setFields(fields): void {
+    var f = this.normalizeArray(fields,'id');
+    this.currentConfig.config.fields = f;
   }
 
   ngOnInit(): void {
     if (this.jsonEditor && this.jsonEditor['editor']) {
       this.jsonEditor.set(this.currentConfig.query);
-      this.jsonEditor.expandAll();
     }
 
     this.apiService
       .getFields()
-      .subscribe((dto) => console.log(dto),
+      .subscribe(
+        (dto) => this.setFields(dto),
         (err) => console.log('Error', err));
   }
 }

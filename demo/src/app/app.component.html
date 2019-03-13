@@ -2,14 +2,6 @@
   <div class="m-s">GA4GH Discovery Search Query Builder</div>
 </mat-toolbar>
 <div class="m-a">
-  <mat-form-field style="width: 400px" >
-    <mat-select placeholder="Configuration"
-                [(value)]="currentConfig">
-      <mat-option *ngFor="let configuration of configurations" [value]="configuration">
-        {{ configuration.name }}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
   <div class="pull-right">
     <button mat-raised-button color="primary">Search</button>
   </div>
@@ -17,6 +9,7 @@
   <mat-tab-group>
     <mat-tab label="Fields">
       <div class="m-v">
+        {{currentConfig | json}}
         <div class="mat-table">
           <div class="mat-header-row">
             <div class="mat-header-cell">Name</div>
@@ -44,7 +37,7 @@
       </div>
     </mat-tab>
 
-    <mat-tab label="GUI">
+    <mat-tab label="GUI" ng-if="currentConfig.config.fields">
       <div class="m-v">
         <query-builder [ngModel]="currentConfig.query"
                        (ngModelChange)="updateJsonEditor($event)"
