@@ -39,10 +39,9 @@
 
     <mat-tab label="GUI">
       <div class="m-v">
-        {{config | json }}
         <query-builder [ngModel]="query"
                        (ngModelChange)="updateJsonEditor($event)"
-                       [config]="config">
+                       [config]="config" *ngIf="config.fields">
           <ng-container *queryButtonGroup="let ruleset; let addRule=addRule; let addRuleSet=addRuleSet; let removeRuleSet=removeRuleSet">
             <button type="button" matTooltip="Add Rule" mat-icon-button color="primary" (click)="addRule()">
               <mat-icon>add</mat-icon></button>

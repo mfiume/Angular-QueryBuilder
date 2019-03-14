@@ -14,14 +14,12 @@ export class AppComponent implements OnInit {
 
   public query = {
     condition: 'and',
-    rules: []
+    rules: [
+
+    ]
   };
 
-  public config = {
-    fields : {
-      one : { id: 'one', name: 'one', type: 'string'}
-    }
-  }
+  public config = {};
 
   @ViewChild('jsonEditor')
   jsonEditor: JsonEditorComponent;
@@ -61,8 +59,8 @@ export class AppComponent implements OnInit {
     this.apiService
       .getFields()
       .subscribe((fields: Field[]) => {
-            var f = this.normalizeArray(fields,'id');
-            this.config.fields = f;
+            fields = this.normalizeArray(fields,'id');
+            this.config.fields = fields;
         },
         //(dto) => this.setFields(dto),
         (err) => console.log('Error', err));
