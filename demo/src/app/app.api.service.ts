@@ -12,7 +12,7 @@ export class ApiService {
 
   }
 
-  getFields() {
+  getFields() : Observable<Array<Field>> {
     return this.httpClient.get(`${this.apiURL}/fields`);
   }
 

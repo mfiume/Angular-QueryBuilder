@@ -6,10 +6,10 @@
     <button mat-raised-button color="primary">Search</button>
   </div>
   <div class="clearfix"></div>
+  <div class="m-v">
   <mat-tab-group>
     <mat-tab label="Fields">
       <div class="m-v">
-        {{currentConfig | json}}
         <div class="mat-table">
           <div class="mat-header-row">
             <div class="mat-header-cell">Name</div>
@@ -18,7 +18,7 @@
             <div class="mat-header-cell">Options</div>
             <div class="mat-header-cell">Operators</div>
           </div>
-          <div class="mat-row" *ngFor="let field of currentConfig.config.fields | keyvalue">
+          <div class="mat-row" *ngFor="let field of config.fields | keyvalue">
             <div class="mat-cell">{{field.value.name}}</div>
             <div class="mat-cell"><a href="{{field.value.spec}}">{{field.value.id}}</a></div>
             <div class="mat-cell">{{field.value.type}}</div>
@@ -37,11 +37,12 @@
       </div>
     </mat-tab>
 
-    <mat-tab label="GUI" ng-if="currentConfig.config.fields">
+    <mat-tab label="GUI">
       <div class="m-v">
-        <query-builder [ngModel]="currentConfig.query"
+        {{config | json }}
+        <query-builder [ngModel]="query"
                        (ngModelChange)="updateJsonEditor($event)"
-                       [config]="currentConfig.config">
+                       [config]="config">
           <ng-container *queryButtonGroup="let ruleset; let addRule=addRule; let addRuleSet=addRuleSet; let removeRuleSet=removeRuleSet">
             <button type="button" matTooltip="Add Rule" mat-icon-button color="primary" (click)="addRule()">
               <mat-icon>add</mat-icon></button>

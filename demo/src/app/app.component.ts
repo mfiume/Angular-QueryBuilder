@@ -12,13 +12,14 @@ import { ApiService } from './app.api.service';
 export class AppComponent implements OnInit {
   public queryCtrl: FormControl;
 
-  public currentConfig = {
-    query : {
-      condition: 'and',
-      rules: []
-    },
-    config : {
-      fields : {}
+  public query = {
+    condition: 'and',
+    rules: []
+  };
+
+  public config = {
+    fields : {
+      one : { id: 'one', name: 'one', type: 'string'}
     }
   }
 
@@ -31,7 +32,7 @@ export class AppComponent implements OnInit {
     private formBuilder: FormBuilder,
     private apiService: ApiService
   ) {
-    this.queryCtrl = this.formBuilder.control(this.currentConfig.query);
+    this.queryCtrl = this.formBuilder.control(this.query);
 
     this.editorOptions.mode = 'tree';
     this.editorOptions.mainMenuBar = false;
@@ -52,20 +53,18 @@ export class AppComponent implements OnInit {
      return normalizedObject as { [key: string]: T }
    }
 
-  setFields(fields): void {
-    var f = this.normalizeArray(fields,'id');
-    this.currentConfig.config.fields = f;
-  }
-
   ngOnInit(): void {
     if (this.jsonEditor && this.jsonEditor['editor']) {
-      this.jsonEditor.set(this.currentConfig.query);
+      this.jsonEditor.set(this.query);
     }
 
     this.apiService
       .getFields()
-      .subscribe(
-        (dto) => this.setFields(dto),
+      .subscribe((fields: Field[]) => {
+            var f = this.normalizeArray(fields,'id');
+            this.config.fields = f;
+        },
+        //(dto) => this.setFields(dto),
         (err) => console.log('Error', err));
   }
 }
