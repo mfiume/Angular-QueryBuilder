@@ -15,22 +15,24 @@
             <div class="mat-header-cell">Name</div>
             <div class="mat-header-cell">ID</div>
             <div class="mat-header-cell">Type</div>
+            <div class="mat-header-cell">Specification</div>
             <div class="mat-header-cell">Options</div>
             <div class="mat-header-cell">Operators</div>
           </div>
           <div class="mat-row" *ngFor="let field of config.fields | keyvalue">
             <div class="mat-cell">{{field.value.name}}</div>
-            <div class="mat-cell"><a href="{{field.value.spec}}">{{field.value.id}}</a></div>
+            <div class="mat-cell">{{field.value.id}}</div>
             <div class="mat-cell">{{field.value.type}}</div>
+            <div class="mat-cell"><a href="{{field.value.spec}}">{{field.value.spec}}</a></div>
             <div class="mat-cell">
               <div *ngFor="let option of field.value.options | keyvalue">
                 {{option.value.name}}
               </div>
             </div>
             <div class="mat-cell">
-              <div *ngFor="let operator of field.value.operators">
-                {{operator}}
-              </div>
+              <span *ngFor="let operator of field.value.operators">
+                {{operator}}{{$last ? '' : ', '}}
+              </span>
             </div>
           </div>
         </div>

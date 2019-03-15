@@ -1,8 +1,8 @@
 import {FormBuilder, FormControl} from '@angular/forms';
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {CONFIGURATIONS} from './configurations.model';
 import {JsonEditorComponent, JsonEditorOptions} from 'ang-jsoneditor';
 import { ApiService } from './app.api.service';
+import { Field } from './model/search/field';
 
 @Component({
   selector: 'app-root',
@@ -13,10 +13,8 @@ export class AppComponent implements OnInit {
   public queryCtrl: FormControl;
 
   public query = {
-    condition: 'and',
-    rules: [
-
-    ]
+    condition : 'and',
+    rules : []
   };
 
   public config = {};
